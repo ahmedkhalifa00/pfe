@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+
+package tracker;
+
+message Location {
+  string kidId = 1;
+  double latitude = 2;
+  double longitude = 3;
+  int64 timestamp = 4;
+}
+
+service LocationService {
+
+  rpc UpdateLocation(Location) returns (google.protobuf.Empty);
+  rpc GetLocation(stream KidId) returns (stream Location);
+}
+
+message KidId {
+  string id = 1;
+}
