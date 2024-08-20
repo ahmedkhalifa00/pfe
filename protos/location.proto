@@ -1,22 +1,57 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 
-
 package tracker;
 
 message Location {
   string kidId = 1;
   double latitude = 2;
   double longitude = 3;
-  int64 timestamp = 4;
+  string timestamp = 4;
 }
 
-service LocationService {
-
-  rpc UpdateLocation(Location) returns (google.protobuf.Empty);
-  rpc GetLocation(stream KidId) returns (stream Location);
+message HomeLocation {
+  string kidId = 1;
+  double latitude = 2;
+  double longitude = 3;
+  double radius = 4; // Radius in meters
 }
 
 message KidId {
   string id = 1;
+}
+
+message MicRequest {
+  string kidId = 1;
+}
+
+message VolumeRequest {
+  string kidId = 1;
+}
+
+message Response {
+  string status = 1;
+}
+
+message LocationHistoryRequest {
+  string kidId = 1;
+  string startDate = 2; // ISO 8601 format
+  string endDate = 3; // ISO 8601 format
+}
+
+message LocationHistoryResponse {
+  repeated Location locations = 1;
+}
+
+service LocationService {
+  rpc UpdateLocation(Location) returns (google.protobuf.Empty);
+  rpc UpdateHomeLocation(HomeLocation) returns (google.protobuf.Empty);
+  rpc GetLocation(stream KidId) returns (stream Location);
+  rpc GetLocationHistory(LocationHistoryRequest) returns (LocationHistoryResponse);
+
+  
+  rpc StartMicListening(MicRequest) returns (Response);
+  rpc StopMicListening(MicRequest) returns (Response);
+  rpc StartVolumeNotification(VolumeRequest) returns (Response);
+  rpc StopVolumeNotification(VolumeRequest) returns (Response);
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package audio;
+
+service AudioStream {
+  // Bidirectional streaming for audio data
+  rpc StreamAudio(stream AudioChunk) returns (stream AudioChunk);
+}
+
+message AudioChunk {
+  bytes audio_data = 1;
+}
